@@ -30,18 +30,21 @@ users.post('/register', (req, res) => {
           userData.password = hash;
           User.create(userData)
             .then(user => {
-              res.json({ status: user.email + 'registered' });
+              console.log({ status: user.email + ' registered' });
+              res.json({ status: user.email + ' registered' });
             })
             .catch(err => {
+              console.error(`error: ${err}`);
               res.send(`error: ${err}`);
             });
         });
       } else {
+        console.error({ error: 'User already exists' });
         res.json({ error: 'User already exists' });
       }
     })
     .catch(err => {
-      re.send(`error: ${err}`);
+      res.send(`error: ${err}`);
     });
 });
 
