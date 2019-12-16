@@ -48,4 +48,26 @@ users.post('/register', (req, res) => {
     });
 });
 
+users.post('/login', (req, res) => {
+  User.findOne({
+    where: {
+      email: req.body.email
+    }
+  })
+    .then(user => {
+      if (user) {
+        if (bcryptjs.compareSync(req.body.password, user.password)) {
+          let token = jwt.sign(user.dataValues, process.env.SECRET_KEY, {
+            expiresIn: 1440
+          });
+          res.send(token);
+        }
+      } else {
+        res.status(400).json({ error: 'User does not exist' });
+      }
+    })
+    .catch(err => {
+      res.status(400).json({ error: err });
+    });
+});
 module.exports = users;
